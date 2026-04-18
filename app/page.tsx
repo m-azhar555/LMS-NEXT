@@ -1,65 +1,97 @@
-import Image from "next/image";
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
+import { Users, TrendingUp, DollarSign, Loader2 } from "lucide-react";
+import { useDashboardStats } from "@/hooks/useDashboard";
 
 export default function Home() {
+  const { data, isLoading, error } = useDashboardStats();
+
+  if (isLoading) {
+    return (
+      <div className="h-[80vh] flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="animate-spin text-accent" size={48} />
+        <p className="text-gray-400 animate-pulse">Fetching Real-time Analytics...</p>
+      </div>
+    );
+  }
+
+  const stats = [
+    { label: 'Total Leads', value: data?.leads, icon: Users, color: 'text-blue-400' },
+    { label: 'Conversion', value: data?.conversion, icon: TrendingUp, color: 'text-green-400' },
+    { label: 'Revenue', value: data?.revenue, icon: DollarSign, color: 'text-accent' },
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-10">
+      <header className="flex justify-between items-end">
+        <div>
+          <h2 className="text-3xl font-bold">CodeVector <span className="text-accent">Live Hub</span></h2>
+          <p className="text-gray-400">Your agency metrics are synced and up to date.</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="text-xs bg-green-500/10 text-green-400 px-3 py-1 rounded-full border border-green-500/20 flex items-center gap-2">
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          Live Connection
         </div>
-      </main>
-    </div>
+      </header>
+
+      {/* Stats Cards with Data */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {stats.map((stat, i) => (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.1 }}
+            key={stat.label}
+            className="bg-navy-900 border border-navy-800 p-6 rounded-2xl hover:border-accent/30 transition-all cursor-default relative overflow-hidden group"
+          >
+            <div className="flex justify-between items-start relative z-10">
+              <div>
+                <p className="text-gray-500 text-sm font-medium">{stat.label}</p>
+                <h3 className="text-3xl font-bold mt-1 tracking-tight">{stat.value}</h3>
+              </div>
+              <div className={`p-3 bg-navy-800 rounded-xl ${stat.color} group-hover:bg-accent group-hover:text-navy-900 transition-all duration-300`}>
+                <stat.icon size={22} />
+              </div>
+            </div>
+            {/* Hover Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Recent Activity Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 bg-navy-900 border border-navy-800 rounded-3xl p-8 shadow-2xl">
+          <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+            System Logs <span className="text-[10px] bg-navy-800 px-2 py-1 rounded text-gray-400">Day 15</span>
+          </h3>
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((item) => (
+              <motion.div 
+                whileHover={{ x: 5 }}
+                key={item} 
+                className="flex items-center gap-4 p-4 rounded-xl hover:bg-navy-800/50 border border-transparent hover:border-navy-700 transition-all"
+              >
+                <div className="w-2 h-2 rounded-full bg-accent shadow-[0_0_10px_rgba(78,168,222,0.5)]" />
+                <p className="text-sm text-gray-300 flex-1">User authentication verified for lead #{400 + item}</p>
+                <span className="text-xs text-gray-600 font-mono">OK 200</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Sidebar Info Card */}
+        <div className="bg-accent rounded-3xl p-8 text-navy-950 flex flex-col justify-between overflow-hidden relative">
+          <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full" />
+          <div>
+            <h4 className="font-bold text-2xl mb-2">Pro Tip</h4>
+            <p className="text-navy-900/80 text-sm">Axios Interceptors are working in the background to secure every request you make.</p>
+          </div>
+          <button className="mt-8 bg-navy-950 text-white py-3 rounded-xl font-bold hover:scale-105 transition-transform active:scale-95">
+            View API Docs
+          </button>
+        </div>
+      </div>
+    </motion.div>
   );
 }
