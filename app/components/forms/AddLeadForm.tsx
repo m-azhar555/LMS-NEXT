@@ -21,8 +21,8 @@ export default function AddLeadForm({ onSuccess }: { onSuccess: (data: LeadFormV
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-400">Client Name</label>
         <input
-          {...register("name")}
-          placeholder="e.g. John Doe"
+          type="number"
+    {...register("budget", { valueAsNumber: true })} // Yeh zaroori hai
           className={`w-full bg-navy-950 border ${errors.name ? 'border-red-500' : 'border-navy-700'} p-3 rounded-xl focus:border-accent outline-none transition-all text-white`}
         />
         {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
