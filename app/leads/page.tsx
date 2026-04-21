@@ -221,4 +221,3 @@ export default function LeadsPage() {
   );
 }
 
-console.log();

@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from './components/Sidebar';
 // 1. Provider ko import karein
 import QueryProvider from './providers/QueryProvider'; 
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
           <Sidebar />
           <main className="flex-1 ml-64 p-8">
             {children}
+            <Toaster position="top-right" richColors />
           </main>
         </QueryProvider>
 
